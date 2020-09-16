@@ -11,7 +11,7 @@ control 'core-plans-erlang20-works' do
   (1) its installation directory exists 
   (2) erl returns the expected version
   (3) all other binaries, except for "escript" return expected "help" usage info
-  (4) escript successfully runs an erlang "Hello World!" script
+  (4) escript successfully runs an erlang "Hello World" script
 
   NOTE: testing all these binaries can be tricky: some use "--help" others
   use "-help"; some return output to stdout, other to stderr; some return "Usage:..."
@@ -71,7 +71,7 @@ control 'core-plans-erlang20-works' do
     if(script)
       Tempfile.open('foo') do |f|
         f << script
-        sleep(1)
+        sleep(5) unless File.exists?(f.path)
         @command_under_test = command("#{command_full_path} #{f.path} #{command_suffix}")
       end
     else
