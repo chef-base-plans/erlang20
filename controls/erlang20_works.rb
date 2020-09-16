@@ -11,7 +11,7 @@ control 'core-plans-erlang20-works' do
   (1) its installation directory exists 
   (2) erl returns the expected version
   (3) all other binaries, except for "escript" return expected "help" usage info
-  (4) escript successfully runs an erlang "Hello World!" script
+  (4) escript successfully runs an erlang "Hello World" script
 
   NOTE: testing all these binaries can be tricky: some use "--help" others
   use "-help"; some return output to stdout, other to stderr; some return "Usage:..."
