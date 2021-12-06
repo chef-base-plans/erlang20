@@ -1,14 +1,14 @@
 pkg_name=erlang20
 pkg_origin=core
-pkg_version=20.3
+pkg_version=20.3.8.26
 pkg_description="A programming language for massively scalable soft real-time systems."
 pkg_upstream_url="http://www.erlang.org/"
 pkg_license=('Apache-2.0')
 pkg_maintainer="The Habitat Maintainers <humans@habitat.sh>"
-pkg_source="http://www.erlang.org/download/otp_src_${pkg_version}.tar.gz"
+pkg_source=https://github.com/erlang/otp/archive/refs/tags/OTP-${pkg_version}.tar.gz
 pkg_filename="otp_src_${pkg_version}.tar.gz"
-pkg_shasum=4e19e6c403d5255531c0b870f19511c8b8e3b080618e4f9efcb44d905935b2a1
-pkg_dirname="otp_src_${pkg_version}"
+pkg_shasum=dce78b60938a48b887317e5222cff946fd4af36666153ab2f0f022aa91755813
+pkg_dirname="otp-OTP-${pkg_version}"
 pkg_build_deps=(
   core/coreutils
   core/gcc
@@ -16,6 +16,7 @@ pkg_build_deps=(
   core/openssl
   core/perl
   core/m4
+	core/autoconf/2.69
 )
 pkg_deps=(
   core/glibc
@@ -42,20 +43,19 @@ do_prepare() {
 }
 
 do_build() {
-  sed -i 's/std_ssl_locations=.*/std_ssl_locations=""/' erts/configure.in
-  sed -i 's/std_ssl_locations=.*/std_ssl_locations=""/' erts/configure
-  CFLAGS="${CFLAGS} -O2" ./configure \
-    --prefix="${pkg_prefix}" \
-    --enable-threads \
-    --enable-smp-support \
-    --enable-kernel-poll \
-    --enable-dynamic-ssl-lib \
-    --enable-shared-zlib \
-    --enable-hipe \
-    --with-ssl="$(pkg_path_for openssl)" \
-    --with-ssl-include="$(pkg_path_for openssl)/include" \
-    --without-javac
-  make
+	./otp_build autoconf
+	./otp_build configure \
+		--prefix="${pkg_prefix}" \
+		--enable-threads \
+		--enable-smp-support \
+		--enable-kernel-poll \
+		--enable-dynamic-ssl-lib \
+		--enable-shared-zlib \
+		--enable-hipe \
+		--with-ssl="$(pkg_path_for openssl)" \
+		--with-ssl-include="$(pkg_path_for openssl)/include" \
+		--without-javac
+	make
 }
 
 do_end() {
